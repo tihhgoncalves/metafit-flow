@@ -9,7 +9,7 @@ declare(strict_types=1);
     <meta name="theme-color" content="#13352d">
     <meta name="description" content="Triagem inicial do MetaFit.">
     <title>Triagem | MetaFit Flow</title>
-    <link rel="stylesheet" href="/public/assets/css/app.css">
+    <link rel="stylesheet" href="/public/assets/css/style.css?v=<?= urlencode($appVersion) ?>">
 </head>
 <body>
     <main class="page-shell">
@@ -33,7 +33,7 @@ declare(strict_types=1);
                 <div class="completion__icon" aria-hidden="true">✓</div><p class="eyebrow">Tudo certo</p><h1>Obrigado por compartilhar.</h1>
                 <p class="description">Recebemos suas respostas. Em breve, você continuará a conversa pelo WhatsApp.</p><a class="button" href="/">Voltar ao início</a>
             </div>
-            <footer class="flow-footer">Suas informações são tratadas com cuidado e privacidade.</footer>
+            <footer class="flow-footer">Suas informações são tratadas com cuidado e privacidade. <span aria-label="Versão">v<?= htmlspecialchars($appVersion, ENT_QUOTES, 'UTF-8') ?></span></footer>
         </section>
     </main>
     <script src="/public/assets/js/triage.js" defer></script>

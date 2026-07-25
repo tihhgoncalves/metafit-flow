@@ -31,3 +31,18 @@ Depois, acesse `http://metafit-flow.localhost:8000`.
 Para adicionar uma nova experiência, crie uma página em `public/pages/` e associe a rota no início de `public/index.php`. Assim, uma próxima interação pode ficar disponível em `/assunto2` sem interferir na triagem.
 
 Nesta primeira versão a triagem é somente demonstrativa. O envio e o carregamento de dados serão conectados a uma API futuramente.
+
+## Estilos e versão
+
+Os estilos-fonte ficam em `scss/`. Para gerar o CSS público, instale as dependências e execute:
+
+```powershell
+npm install
+npm run build
+```
+
+O número em `package.json` é a versão da aplicação: ele aparece no rodapé e é usado no parâmetro de cache do `style.css`.
+
+## Deploy
+
+O workflow do GitHub Actions em `.github/workflows/deploy.yml` é executado a cada push para `main` (ou manualmente) e publica o projeto em `/public_html/flow/` via FTP. Ele usa os secrets `FTP_HOST`, `FTP_USER` e `FTP_PASSWORD` já cadastrados no repositório.

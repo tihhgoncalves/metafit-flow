@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+$package = json_decode((string) file_get_contents(__DIR__ . '/../package.json'), true);
+$appVersion = is_array($package) && isset($package['version']) ? (string) $package['version'] : '0.0.0';
 $route = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/') ?: '/';
 
 if ($route === '/triagem') {
@@ -18,7 +20,7 @@ http_response_code($route === '/' ? 200 : 404);
     <meta name="theme-color" content="#13352d">
     <meta name="description" content="Experiências web do MetaFit.">
     <title>MetaFit Flow</title>
-    <link rel="stylesheet" href="/public/assets/css/app.css">
+    <link rel="stylesheet" href="/public/assets/css/style.css?v=<?= urlencode($appVersion) ?>">
 </head>
 <body>
     <main class="page-shell">
@@ -42,6 +44,7 @@ http_response_code($route === '/' ? 200 : 404);
                     <a class="button" href="/">Voltar ao início</a>
                 </div>
             <?php endif; ?>
+            <footer class="flow-footer">MetaFit Flow <span aria-label="Versão">v<?= htmlspecialchars($appVersion, ENT_QUOTES, 'UTF-8') ?></span></footer>
         </section>
     </main>
 </body>

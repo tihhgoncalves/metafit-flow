@@ -1,0 +1,13 @@
+{
+  "name": "metafit-flow",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:css",
+    "build:css": "sass scss/style.scss public/assets/css/style.css --no-source-map",
+    "watch:css": "sass --watch scss/style.scss:public/assets/css/style.css --no-source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.90.0"
+  }
+}
