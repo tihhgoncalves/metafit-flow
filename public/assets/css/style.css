@@ -255,9 +255,19 @@ h1 {
 }
 
 .flow-footer {
-  margin-top: auto;
-  padding-top: 30px;
+  padding-top: 16px;
+  color: #899191;
+  font: 11px "DM Mono", Consolas, monospace;
+  letter-spacing: 0.02em;
   text-align: center;
+}
+
+.flow-wrapper {
+  width: min(100%, 640px);
+}
+
+.flow-wrapper .flow-card {
+  width: 100%;
 }
 
 .home-content {

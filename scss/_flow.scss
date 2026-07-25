@@ -31,6 +31,8 @@ h1 { max-width:510px; margin:0; font-size:clamp(2rem, 5vw, 2.7rem); line-height:
 .completion { margin:auto 0; text-align:center; }
 .completion h1, .completion .description { margin-left:auto; margin-right:auto; }
 .completion__icon { display:grid; place-items:center; width:58px; height:58px; margin:0 auto 24px; border-radius:50%; background:var(--soft); color:var(--brand); font-size:1.8rem; font-weight:800; }
-.flow-footer { margin-top:auto; padding-top:30px; text-align:center; }
+.flow-footer { padding-top:16px; color:#899191; font:11px "DM Mono", Consolas, monospace; letter-spacing:.02em; text-align:center; }
+.flow-wrapper { width:min(100%, 640px); }
+.flow-wrapper .flow-card { width:100%; }
 .home-content { margin:auto 0; }
 @media (max-width:560px) { .page-shell { padding:0; } .flow-card { min-height:100vh; padding:24px; border:0; border-radius:0; } .flow-label { display:none; } .progress { margin:38px 0; } }

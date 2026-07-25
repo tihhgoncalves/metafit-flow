@@ -11,41 +11,43 @@ if ($route === '/triagem') {
     return;
 }
 
-http_response_code($route === '/' ? 200 : 404);
+http_response_code(404);
 ?><!doctype html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#13352d">
-    <meta name="description" content="Experiências web do MetaFit.">
-    <title>MetaFit Flow</title>
+    <meta name="theme-color" content="#e7236d">
+    <meta name="description" content="Página indisponível.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Página indisponível | MetaFit Flow">
+    <meta property="og:description" content="Esta página não pode ser exibida.">
+    <meta property="og:image" content="https://flow.usemetafit.com/public/assets/images/social.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Página indisponível | MetaFit Flow">
+    <meta name="twitter:description" content="Esta página não pode ser exibida.">
+    <meta name="twitter:image" content="https://flow.usemetafit.com/public/assets/images/social.png">
+    <title>Página indisponível | MetaFit Flow</title>
+    <link rel="icon" type="image/png" href="/public/assets/images/favico.png">
     <link rel="stylesheet" href="/public/assets/css/style.css?v=<?= urlencode($appVersion) ?>">
 </head>
 <body>
     <main class="page-shell">
-        <section class="flow-card flow-card--home" aria-labelledby="flow-title">
+        <div class="flow-wrapper">
+            <section class="flow-card flow-card--home" aria-labelledby="flow-title">
             <header class="flow-header">
                 <a class="brand" href="/" aria-label="MetaFit Flow, início"><img src="/public/assets/images/metafit-logo.svg" alt="MetaFit"></a>
-                <span class="flow-label">Experiências digitais</span>
+                <span class="flow-label">Sua saúde, com inteligência.</span>
             </header>
-            <?php if ($route === '/'): ?>
-                <div class="home-content">
-                    <p class="eyebrow">Olá</p>
-                    <h1 id="flow-title">Seu próximo passo começa aqui.</h1>
-                    <p class="description">Quando o MetaFit enviar um link no WhatsApp, você chegará a uma experiência preparada para aquele momento.</p>
-                    <a class="button" href="/triagem">Iniciar triagem</a>
-                </div>
-            <?php else: ?>
-                <div class="home-content">
-                    <p class="eyebrow">Página não encontrada</p>
-                    <h1 id="flow-title">Não encontramos esta experiência.</h1>
-                    <p class="description">Verifique o link recebido ou volte para o início.</p>
-                    <a class="button" href="/">Voltar ao início</a>
-                </div>
-            <?php endif; ?>
+            <div class="home-content">
+                <p class="eyebrow">Página indisponível</p>
+                <h1 id="flow-title">Esta página não pode ser exibida.</h1>
+                <p class="description">Verifique o link recebido pelo WhatsApp e tente novamente.</p>
+            </div>
+            </section>
             <footer class="flow-footer">MetaFit Flow <span aria-label="Versão">v<?= htmlspecialchars($appVersion, ENT_QUOTES, 'UTF-8') ?></span></footer>
-        </section>
+        </div>
     </main>
 </body>
 </html>
