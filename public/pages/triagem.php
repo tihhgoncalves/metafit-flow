@@ -39,7 +39,7 @@ declare(strict_types=1);
                 <p class="description" id="question-description">Essas respostas nos ajudam a preparar uma experiência mais adequada para o seu momento.</p>
                 <form id="triage-form" novalidate>
                     <fieldset id="answers" class="answers"></fieldset>
-                    <p class="field-error" id="field-error" role="alert" hidden>Escolha uma opção para continuar.</p>
+                    <p class="field-error" id="field-error" role="alert" hidden>Preencha esta resposta para continuar.</p>
                     <div class="actions"><button class="button button--secondary" id="previous-button" type="button" hidden>Voltar</button><button class="button" id="next-button" type="submit">Continuar</button></div>
                 </form>
             </div>
