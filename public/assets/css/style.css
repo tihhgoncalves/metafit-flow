@@ -35,7 +35,7 @@ body {
   min-width: 320px;
   color: var(--ink);
   background: var(--background);
-  font-family: Arial, sans-serif;
+  font-family: "Space Grotesk", sans-serif;
 }
 
 button, input {
@@ -133,7 +133,9 @@ button, input {
 h1 {
   max-width: 510px;
   margin: 0;
+  font-family: "Space Grotesk", sans-serif;
   font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 700;
   line-height: 1.08;
   letter-spacing: -0.055em;
 }

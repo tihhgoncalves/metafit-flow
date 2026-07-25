@@ -18,6 +18,9 @@ declare(strict_types=1);
     <meta name="twitter:image" content="https://flow.usemetafit.com/public/assets/images/social.png">
     <title>Triagem | MetaFit Flow</title>
     <link rel="icon" type="image/png" href="/public/assets/images/favico.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/public/assets/css/style.css?v=<?= urlencode($appVersion) ?>">
 </head>
 <body>

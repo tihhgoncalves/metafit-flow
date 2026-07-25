@@ -1,6 +1,6 @@
 :root { --pink:#e7236d; --hot:#ff4b93; --ink:#111313; --panel:#1c2020; --muted:#717171; --surface:#fff; --background:#e9eff0; --line:#dce2e2; --brand:var(--pink); --brand-dark:#ce1762; --soft:#fcedf3; }
 * { box-sizing:border-box; }
-body { margin:0; min-width:320px; color:var(--ink); background:var(--background); font-family:Arial, sans-serif; }
+body { margin:0; min-width:320px; color:var(--ink); background:var(--background); font-family:"Space Grotesk", sans-serif; }
 button, input { font:inherit; }
 .page-shell { min-height:100vh; display:grid; place-items:center; padding:24px; background:radial-gradient(circle at 85% 8%, #3a1829 0, transparent 31rem), var(--ink); }
 .flow-card { width:min(100%, 640px); min-height:620px; display:flex; flex-direction:column; padding:28px 40px; border:1px solid #ffffff14; border-radius:24px; background:var(--surface); box-shadow:0 30px 70px #0008; }
@@ -14,7 +14,7 @@ button, input { font:inherit; }
 .progress > span { min-width:42px; text-align:right; white-space:nowrap; }
 .eyebrow { margin:0 0 12px; color:var(--hot); font-size:.7rem; font-weight:750; letter-spacing:.12em; text-transform:uppercase; }
 .eyebrow::before { content:""; display:inline-block; width:8px; height:8px; margin-right:8px; border-radius:50%; background:currentColor; }
-h1 { max-width:510px; margin:0; font-size:clamp(2rem, 5vw, 2.7rem); line-height:1.08; letter-spacing:-.055em; }
+h1 { max-width:510px; margin:0; font-family:"Space Grotesk", sans-serif; font-size:clamp(2rem, 5vw, 2.7rem); font-weight:700; line-height:1.08; letter-spacing:-.055em; }
 .description { max-width:490px; margin:18px 0 32px; color:var(--muted); font-size:1rem; line-height:1.55; }
 .answers { display:grid; gap:12px; margin:0; padding:0; border:0; }
 .answer { position:relative; display:flex; align-items:center; gap:13px; min-height:58px; padding:15px 17px; border:1px solid var(--line); border-radius:14px; cursor:pointer; transition:.16s ease; }
