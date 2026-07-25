@@ -14,6 +14,8 @@ Depois, acesse `http://metafit-flow.localhost:8000`.
 
 > Para usar exatamente `http://metafit-flow.localhost`, configure o domínio no seu ambiente local (por exemplo, Herd, Valet ou um virtual host apontando para a pasta do projeto).
 
+Em servidores Apache, os arquivos `.htaccess` da raiz e de `public/` encaminham URLs como `/triagem/{token}` para a aplicação. O módulo `mod_rewrite` precisa estar habilitado e o virtual host deve permitir `AllowOverride FileInfo` (ou `AllowOverride All`).
+
 ## Estrutura
 
 - `index.php`: ponto de entrada principal do projeto, adequado para configurações em que a raiz do repositório é o diretório público.
@@ -29,6 +31,17 @@ Depois, acesse `http://metafit-flow.localhost:8000`.
 | `/triagem` | Questionário inicial do usuário. |
 
 Para adicionar uma nova experiência, crie uma página em `public/pages/` e associe a rota no início de `public/index.php`. Assim, uma próxima interação pode ficar disponível em `/assunto2` sem interferir na triagem.
+
+## API
+
+A triagem exige um token na URL: `/triagem/{token}`. O servidor consulta `GET /users/me` com o cabeçalho `Authorization: Bearer {token}` antes de exibir o fluxo.
+
+A API é selecionada automaticamente conforme o host:
+
+- Local: `http://localhost:3333`
+- Produção: `https://metafit-api.rocket.srv.br`
+
+Para substituir essa seleção, defina a variável de ambiente `METAFIT_API_BASE_URL` no servidor.
 
 Nesta primeira versão a triagem é somente demonstrativa. O envio e o carregamento de dados serão conectados a uma API futuramente.
 

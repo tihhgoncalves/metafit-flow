@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../app/MetaFitApi.php';
+
 $package = json_decode((string) file_get_contents(__DIR__ . '/../package.json'), true);
 $appVersion = is_array($package) && isset($package['version']) ? (string) $package['version'] : '0.0.0';
 $route = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/') ?: '/';
 
-if ($route === '/triagem') {
+if (preg_match('#^/triagem/([A-Za-z0-9_-]{32,512})$#', $route, $matches) === 1) {
+    $triageToken = $matches[1];
+    $triageUser = metafitCurrentUser($triageToken);
     require __DIR__ . '/pages/triagem.php';
     return;
 }

@@ -31,6 +31,7 @@ declare(strict_types=1);
                 <a class="brand" href="/" aria-label="MetaFit Flow, início"><img src="/public/assets/images/metafit-logo.svg" alt="MetaFit"></a>
                 <span class="flow-label">Triagem inicial</span>
             </header>
+            <?php if ($triageUser !== null): ?>
             <div class="progress" aria-label="Progresso da triagem"><div class="progress__bar"><span id="progress-bar"></span></div><span id="progress-text">1 de 4</span></div>
             <div id="question-screen">
                 <p class="eyebrow" id="question-category">Vamos começar</p>
@@ -46,10 +47,20 @@ declare(strict_types=1);
                 <div class="completion__icon" aria-hidden="true">✓</div><p class="eyebrow">Tudo certo</p><h1>Obrigado por compartilhar.</h1>
                 <p class="description">Recebemos suas respostas. Em breve, você continuará a conversa pelo WhatsApp.</p><a class="button" href="/">Voltar ao início</a>
             </div>
+            <?php else: ?>
+            <div class="home-content">
+                <p class="eyebrow">Acesso indisponível</p>
+                <h1 id="flow-title">Não foi possível carregar esta triagem.</h1>
+                <p class="description">Verifique o link recebido pelo WhatsApp e tente novamente.</p>
+            </div>
+            <?php endif; ?>
             </section>
             <footer class="flow-footer">MetaFit Flow <span aria-label="Versão">v<?= htmlspecialchars($appVersion, ENT_QUOTES, 'UTF-8') ?></span></footer>
         </div>
     </main>
+    <?php if ($triageUser !== null): ?>
+    <script>window.triageContext = <?= json_encode(['firstName' => $triageUser['first_name'] ?? $triageUser['name'] ?? null, 'user' => $triageUser], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script src="/public/assets/js/triage.js" defer></script>
+    <?php endif; ?>
 </body>
 </html>

@@ -5,6 +5,12 @@ const questions = [
   { category: 'Para finalizar', title: 'Como prefere seguir com o MetaFit?', description: 'Vamos usar isso para deixar a próxima conversa mais útil para você.', options: ['Receber orientações práticas', 'Entender melhor como o serviço funciona', 'Conversar com um especialista', 'Ainda estou conhecendo'] }
 ];
 
+const firstName = window.triageContext?.firstName?.trim()?.split(' ')[0];
+console.info('MetaFit Flow: usuário carregado para a triagem.', window.triageContext?.user);
+if (firstName) {
+  questions[0].title = `Olá, ${firstName}. Quero conhecer você melhor.`;
+}
+
 let current = 0;
 const responses = {};
 const elements = {
