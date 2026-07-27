@@ -60,7 +60,7 @@ declare(strict_types=1);
     </main>
     <?php if ($triageUser !== null): ?>
     <script>window.triageContext = <?= json_encode(['firstName' => $triageUser['first_name'] ?? $triageUser['name'] ?? null, 'user' => $triageUser], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
-    <script src="/public/assets/js/triage.js" defer></script>
+    <script src="/public/assets/js/triage.js?v=<?= urlencode($appVersion) ?>" defer></script>
     <?php endif; ?>
 </body>
 </html>
