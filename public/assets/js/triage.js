@@ -29,7 +29,13 @@ const elements = {
 };
 
 const firstName = window.triageContext?.firstName?.trim()?.split(' ')[0];
-console.info('MetaFit Flow: usuário carregado para a triagem.', window.triageContext?.user);
+console.info('MetaFit Flow: usuário carregado para o ponto de partida.', window.triageContext?.user);
+
+function apiAnswers() {
+  return questions
+    .filter(question => Object.prototype.hasOwnProperty.call(answers, question.id))
+    .map(question => ({ pergunta: question.title, resposta: answers[question.id] }));
+}
 
 function activeQuestions() { return questions.filter(question => !question.condition || question.condition(answers)); }
 function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' })[char]); }
@@ -73,7 +79,7 @@ function normalizeExclusive(question, value) {
   return value.filter(item => item !== question.exclusive || value.length === 1);
 }
 
-elements.form.addEventListener('submit', event => {
+elements.form.addEventListener('submit', async event => {
   event.preventDefault();
   const question = activeQuestions()[current];
   let value = normalizeExclusive(question, readAnswer(question));
@@ -81,7 +87,25 @@ elements.form.addEventListener('submit', event => {
   answers[question.id] = value;
   const active = activeQuestions();
   if (current === active.length - 1) {
-    console.info('MetaFit Flow: respostas da triagem prontas para envio.', answers);
+    elements.next.disabled = true;
+    elements.next.textContent = 'Enviando...';
+    try {
+      const response = await fetch(window.location.pathname, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ respostas: apiAnswers() })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error('submission_failed');
+    } catch (error) {
+      console.error('MetaFit Flow: não foi possível enviar o ponto de partida.', error);
+      elements.next.disabled = false;
+      elements.next.textContent = 'Concluir';
+      elements.error.textContent = 'Não foi possível enviar suas respostas. Tente novamente.';
+      elements.error.hidden = false;
+      return;
+    }
+    console.info('MetaFit Flow: ponto de partida enviado com sucesso.', apiAnswers());
     elements.questionScreen.hidden = true;
     elements.completion.hidden = false;
     document.querySelector('.progress').hidden = true;

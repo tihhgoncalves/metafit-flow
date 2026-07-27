@@ -11,6 +11,25 @@ $route = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '
 if (preg_match('#^/triagem/([A-Za-z0-9_-]{32,512})$#', $route, $matches) === 1) {
     $triageToken = $matches[1];
     $triageUser = metafitCurrentUser($triageToken);
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        header('Content-Type: application/json; charset=utf-8');
+        $requestBody = json_decode((string) file_get_contents('php://input'), true);
+        $answers = is_array($requestBody['respostas'] ?? null) ? $requestBody['respostas'] : null;
+        $userId = $triageUser !== null ? metafitUserId($triageUser) : null;
+
+        if ($answers === null || $userId === null) {
+            http_response_code(422);
+            echo json_encode(['ok' => false]);
+            return;
+        }
+
+        $submitted = metafitSubmitTriage($triageToken, $userId, $answers);
+        http_response_code($submitted ? 200 : 502);
+        echo json_encode(['ok' => $submitted]);
+        return;
+    }
+
     require __DIR__ . '/pages/triagem.php';
     return;
 }

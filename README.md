@@ -28,13 +28,15 @@ Em servidores Apache, os arquivos `.htaccess` da raiz e de `public/` encaminham 
 
 | URL | Interação |
 | --- | --- |
-| `/triagem` | Questionário inicial do usuário. |
+| `/triagem/{token}` | Ponto de partida do usuário. |
 
-Para adicionar uma nova experiência, crie uma página em `public/pages/` e associe a rota no início de `public/index.php`. Assim, uma próxima interação pode ficar disponível em `/assunto2` sem interferir na triagem.
+Para adicionar uma nova experiência, crie uma página em `public/pages/` e associe a rota no início de `public/index.php`. Assim, uma próxima interação pode ficar disponível em `/assunto2` sem interferir no ponto de partida.
 
 ## API
 
-A triagem exige um token na URL: `/triagem/{token}`. O servidor consulta `GET /users/me` com o cabeçalho `Authorization: Bearer {token}` antes de exibir o fluxo.
+O ponto de partida exige um token na URL: `/triagem/{token}`. O servidor consulta `GET /users/me` com o cabeçalho `Authorization: Bearer {token}` antes de exibir o fluxo. Ao concluir, o Flow envia `POST /users/{id}/triagem` com as respostas no objeto `respostas`; o token permanece no servidor e é reutilizado nessa chamada.
+
+As respostas são enviadas como uma lista de objetos com `pergunta` e `resposta`, preservando o texto de cada pergunta exibida no fluxo.
 
 A API é selecionada automaticamente conforme o host:
 
@@ -43,7 +45,7 @@ A API é selecionada automaticamente conforme o host:
 
 Para substituir essa seleção, defina a variável de ambiente `METAFIT_API_BASE_URL` no servidor.
 
-Nesta primeira versão a triagem é somente demonstrativa. O envio e o carregamento de dados serão conectados a uma API futuramente.
+O ponto de partida carrega os dados do usuário e envia as respostas pela API.
 
 ## Estilos e versão
 

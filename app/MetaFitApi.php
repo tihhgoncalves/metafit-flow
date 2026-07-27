@@ -47,3 +47,43 @@ function metafitCurrentUser(string $token): ?array
 
     return is_array($user) ? $user : null;
 }
+
+function metafitUserId(array $user): ?string
+{
+    $id = $user['id'] ?? $user['_id'] ?? $user['user']['id'] ?? $user['user']['_id'] ?? null;
+
+    return is_string($id) && $id !== '' ? $id : null;
+}
+
+/**
+ * @param array<string, mixed> $answers
+ */
+function metafitSubmitTriage(string $token, string $userId, array $answers): bool
+{
+    $request = curl_init(metafitApiBaseUrl() . '/users/' . rawurlencode($userId) . '/triagem');
+
+    if ($request === false) {
+        return false;
+    }
+
+    $payload = json_encode(['respostas' => $answers], JSON_UNESCAPED_UNICODE);
+
+    curl_setopt_array($request, [
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $payload,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $token,
+            'Accept: application/json',
+            'Content-Type: application/json',
+        ],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_CONNECTTIMEOUT => 5,
+    ]);
+
+    curl_exec($request);
+    $status = (int) curl_getinfo($request, CURLINFO_RESPONSE_CODE);
+    curl_close($request);
+
+    return $status >= 200 && $status < 300;
+}

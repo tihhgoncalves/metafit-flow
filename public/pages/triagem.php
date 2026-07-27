@@ -7,16 +7,16 @@ declare(strict_types=1);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#e7236d">
-    <meta name="description" content="Triagem inicial do MetaFit.">
+    <meta name="description" content="Ponto de partida do MetaFit.">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Triagem inicial | MetaFit Flow">
+    <meta property="og:title" content="Ponto de partida | MetaFit Flow">
     <meta property="og:description" content="Conte um pouco sobre você para personalizarmos sua experiência no MetaFit.">
     <meta property="og:image" content="https://flow.usemetafit.com/public/assets/images/social.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Triagem inicial | MetaFit Flow">
+    <meta name="twitter:title" content="Ponto de partida | MetaFit Flow">
     <meta name="twitter:description" content="Conte um pouco sobre você para personalizarmos sua experiência no MetaFit.">
     <meta name="twitter:image" content="https://flow.usemetafit.com/public/assets/images/social.png">
-    <title>Triagem | MetaFit Flow</title>
+    <title>Ponto de partida | MetaFit Flow</title>
     <link rel="icon" type="image/png" href="/public/assets/images/favico.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,10 +29,10 @@ declare(strict_types=1);
             <section class="flow-card" aria-labelledby="flow-title">
             <header class="flow-header">
                 <a class="brand" href="/" aria-label="MetaFit Flow, início"><img src="/public/assets/images/metafit-logo.svg" alt="MetaFit"></a>
-                <span class="flow-label">Triagem inicial</span>
+                <span class="flow-label">Ponto de partida</span>
             </header>
             <?php if ($triageUser !== null): ?>
-            <div class="progress" aria-label="Progresso da triagem"><div class="progress__bar"><span id="progress-bar"></span></div><span id="progress-text">1 de 4</span></div>
+            <div class="progress" aria-label="Progresso do ponto de partida"><div class="progress__bar"><span id="progress-bar"></span></div><span id="progress-text">1 de 4</span></div>
             <div id="question-screen">
                 <p class="eyebrow" id="question-category">Vamos começar</p>
                 <h1 id="flow-title">Quero conhecer você melhor.</h1>
@@ -45,12 +45,12 @@ declare(strict_types=1);
             </div>
             <div id="completion-screen" class="completion" hidden>
                 <div class="completion__icon" aria-hidden="true">✓</div><p class="eyebrow">Tudo certo</p><h1>Obrigado por compartilhar.</h1>
-                <p class="description">Recebemos suas respostas. Em breve, você continuará a conversa pelo WhatsApp.</p><a class="button" href="/">Voltar ao início</a>
+                <p class="description">Recebemos suas respostas. Em breve, você continuará a conversa pelo WhatsApp.</p>
             </div>
             <?php else: ?>
             <div class="home-content">
                 <p class="eyebrow">Acesso indisponível</p>
-                <h1 id="flow-title">Não foi possível carregar esta triagem.</h1>
+                <h1 id="flow-title">Não foi possível carregar este ponto de partida.</h1>
                 <p class="description">Verifique o link recebido pelo WhatsApp e tente novamente.</p>
             </div>
             <?php endif; ?>
