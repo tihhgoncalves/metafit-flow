@@ -103,7 +103,7 @@ elements.form.addEventListener('submit', async event => {
       const response = await fetch(window.location.pathname, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ respostas: apiAnswers() })
+        body: JSON.stringify({ respostas: apiAnswers(), dados_iniciais: answers })
       });
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error('submission_failed');

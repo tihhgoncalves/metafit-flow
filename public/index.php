@@ -26,6 +26,7 @@ if (preg_match('#^/triagem/([A-Za-z0-9_-]{32,512})$#', $route, $matches) === 1) 
         header('Content-Type: application/json; charset=utf-8');
         $requestBody = json_decode((string) file_get_contents('php://input'), true);
         $answers = is_array($requestBody['respostas'] ?? null) ? $requestBody['respostas'] : null;
+        $initialData = is_array($requestBody['dados_iniciais'] ?? null) ? $requestBody['dados_iniciais'] : [];
         $userId = $triageUser !== null ? metafitUserId($triageUser) : null;
 
         if ($answers === null || $userId === null) {
@@ -35,8 +36,9 @@ if (preg_match('#^/triagem/([A-Za-z0-9_-]{32,512})$#', $route, $matches) === 1) 
         }
 
         $submitted = metafitSubmitTriage($triageToken, $userId, $answers);
+        $initialDataRegistered = $submitted ? metafitRegisterInitialData($triageToken, $initialData) : false;
         http_response_code($submitted ? 200 : 502);
-        echo json_encode(['ok' => $submitted]);
+        echo json_encode(['ok' => $submitted, 'dados_iniciais_registrados' => $initialDataRegistered]);
         return;
     }
 

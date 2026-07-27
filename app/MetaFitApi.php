@@ -105,3 +105,51 @@ function metafitNutritionPlanSuggestion(string $token, array $data): ?array
     $result = json_decode($response, true);
     return is_array($result['metas'] ?? null) ? $result['metas'] : null;
 }
+
+function metafitApiRequest(string $token, string $method, string $path, array $payload): bool
+{
+    $request = curl_init(metafitApiBaseUrl() . $path);
+    if ($request === false) return false;
+    curl_setopt_array($request, [
+        CURLOPT_CUSTOMREQUEST => $method, CURLOPT_POSTFIELDS => json_encode($payload, JSON_UNESCAPED_UNICODE),
+        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $token, 'Accept: application/json', 'Content-Type: application/json'],
+        CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 15, CURLOPT_CONNECTTIMEOUT => 5,
+    ]);
+    curl_exec($request);
+    $status = (int) curl_getinfo($request, CURLINFO_RESPONSE_CODE);
+    curl_close($request);
+    return $status >= 200 && $status < 300;
+}
+
+/** @param array<string, mixed> $answers */
+function metafitRegisterInitialData(string $token, array $answers): bool
+{
+    $success = true;
+    $sexes = ['Masculino' => 'masculino', 'Feminino' => 'feminino', 'Prefiro não informar' => 'nao_informado'];
+    $userData = [];
+    if (!empty($answers['birthDate'])) $userData['data_nascimento'] = $answers['birthDate'];
+    if (isset($sexes[$answers['sex'] ?? ''])) $userData['sexo'] = $sexes[$answers['sex']];
+    if ($userData !== []) $success = metafitApiRequest($token, 'PATCH', '/users/me', $userData) && $success;
+
+    if (!empty($answers['currentWeight']) && (float) $answers['currentWeight'] > 0) $success = metafitApiRequest($token, 'POST', '/events', ['event' => 'peso', 'value' => (float) $answers['currentWeight'], 'source' => 'api']) && $success;
+    if (!empty($answers['height']) && (float) $answers['height'] > 0) {
+        $height = (float) $answers['height'];
+        $success = metafitApiRequest($token, 'POST', '/events', ['event' => 'altura', 'value' => $height > 3 ? $height / 100 : $height, 'source' => 'api']) && $success;
+    }
+
+    if (($answers['hasGoalWeight'] ?? null) === 'Sim' && !empty($answers['goalWeight']) && (float) $answers['goalWeight'] > 0) {
+        $goal = ['goal' => 'peso', 'type' => 'objetivo', 'value' => (float) $answers['goalWeight']];
+        if (preg_match('/^(\d+) (mês|meses|ano|anos)$/u', (string) ($answers['goalDeadline'] ?? ''), $match) === 1) {
+            $goal['target_date'] = (new DateTimeImmutable('today'))->modify('+' . $match[1] . (str_starts_with($match[2], 'ano') ? ' years' : ' months'))->format('Y-m-d');
+        }
+        $success = metafitApiRequest($token, 'POST', '/goals', $goal) && $success;
+    }
+
+    $dailyGoals = is_array($answers['nutritionPlan'] ?? null) ? $answers['nutritionPlan'] : [];
+    foreach (['agua', 'calorias', 'proteinas', 'carboidratos', 'gorduras'] as $goalName) {
+        if (!empty($dailyGoals[$goalName]) && (float) $dailyGoals[$goalName] > 0) {
+            $success = metafitApiRequest($token, 'POST', '/goals', ['goal' => $goalName, 'type' => 'diaria', 'value' => (float) $dailyGoals[$goalName]]) && $success;
+        }
+    }
+    return $success;
+}

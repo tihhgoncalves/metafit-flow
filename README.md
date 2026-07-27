@@ -38,6 +38,8 @@ O ponto de partida exige um token na URL: `/triagem/{token}`. O servidor consult
 
 As respostas são enviadas como uma lista de objetos com `pergunta` e `resposta`, preservando o texto de cada pergunta exibida no fluxo.
 
+Após salvar o Ponto de partida, o Flow também registra os dados estruturados disponíveis: data de nascimento e sexo em `/users/me`, eventos de peso e altura em `/events`, meta de peso em `/goals` e cada meta nutricional diária em uma chamada própria para `/goals`.
+
 A API é selecionada automaticamente conforme o host:
 
 - Local: `http://localhost:3333`
