@@ -6,6 +6,7 @@ const questions = [
   { id: 'goal', category: 'Seu objetivo', title: 'Qual é seu principal objetivo?', type: 'single', options: ['Emagrecer', 'Ganhar massa muscular', 'Melhorar minha alimentação', 'Criar hábitos saudáveis', 'Controlar um tratamento de saúde', 'Outro'] },
   { id: 'hasGoalWeight', category: 'Seu objetivo', title: 'Você tem uma meta de peso?', type: 'yesno' },
   { id: 'goalWeight', category: 'Seu objetivo', title: 'Qual é o peso que você deseja alcançar?', description: 'Informe em quilogramas.', type: 'number', unit: 'kg', min: 20, max: 500, step: 0.1, condition: answers => answers.hasGoalWeight === 'Sim' },
+  { id: 'goalDeadline', category: 'Seu objetivo', title: 'Para quando você deseja alcançar essa meta?', description: 'Informe o prazo que faz sentido para o seu momento.', type: 'duration', condition: answers => answers.hasGoalWeight === 'Sim' },
   { id: 'activityFrequency', category: 'Sua rotina', title: 'Você pratica atividade física?', type: 'single', options: ['Nunca', 'Menos de 1 vez por semana', '1 a 2 vezes por semana', '3 a 5 vezes por semana', 'Quase todos os dias'] },
   { id: 'dietQuality', category: 'Sua rotina', title: 'Como você avalia sua alimentação hoje?', type: 'single', options: ['Muito boa', 'Boa', 'Regular', 'Precisa melhorar bastante'] },
   { id: 'continuousMedication', category: 'Sua saúde', title: 'Você utiliza algum medicamento continuamente?', type: 'yesno' },
@@ -19,7 +20,8 @@ const questions = [
   { id: 'routineDropout', category: 'Sua jornada', title: 'Com que frequência você começa uma rotina saudável e acaba desistindo?', type: 'single', options: ['Nunca', 'Às vezes', 'Frequentemente', 'Quase sempre'] },
   { id: 'journeyReason', category: 'Sua jornada', title: 'O que fez você decidir começar essa jornada agora?', type: 'single', options: ['❤️ Quero voltar a gostar de mim.', '👨‍👩‍👧 Quero ter mais saúde para minha família.', '💪 Quero me sentir melhor no meu corpo.', '🩺 Meu médico recomendou que eu cuidasse da minha saúde.', '👕 Quero voltar a vestir as roupas que gosto.', '🏃 Quero ter mais disposição no dia a dia.', '📉 Estou preocupado(a) com meu peso.', '🩸 Quero controlar melhor minha saúde.', '💉 Comecei um tratamento para emagrecimento.', '🌱 Quero criar hábitos mais saudáveis.', '✨ Quero melhorar minha autoestima.', '📝 Outro motivo...'] },
   { id: 'otherReason', category: 'Sua jornada', title: 'Quer compartilhar qual é esse motivo?', description: 'Esta resposta é opcional.', type: 'text', placeholder: 'Escreva aqui, se quiser', optional: true, condition: answers => answers.journeyReason === '📝 Outro motivo...' },
-  { id: 'confidence', category: 'Para finalizar', title: 'Em uma escala de 0 a 10, quanto você acredita que conseguirá alcançar esse objetivo?', description: '0 significa “não acredito” e 10 significa “acredito totalmente”.', type: 'scale' }
+  { id: 'confidence', category: 'Para finalizar', title: 'Em uma escala de 0 a 10, quanto você acredita que conseguirá alcançar esse objetivo?', description: '0 significa “não acredito” e 10 significa “acredito totalmente”.', type: 'scale' },
+  { id: 'nutritionPlan', category: 'Plano nutricional', title: 'Quais metas diárias seu nutricionista ou médico definiu para você?', description: 'Preencha apenas as informações que tiver. Elas serão usadas para acompanhar sua evolução no dia a dia.', type: 'nutrition' }
 ];
 
 let current = 0;
@@ -37,6 +39,10 @@ function apiAnswers() {
     .map(question => ({ pergunta: question.title, resposta: answers[question.id] }));
 }
 
+function nutritionSuggestionData() {
+  return { respostas: apiAnswers() };
+}
+
 function activeQuestions() { return questions.filter(question => !question.condition || question.condition(answers)); }
 function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' })[char]); }
 
@@ -46,6 +52,8 @@ function renderOptions(question) {
   if (question.type === 'number') return `<label class="number-field"><input type="number" name="answer" inputmode="decimal" min="${question.min}" max="${question.max}" step="${question.step}" value="${selected ?? ''}" placeholder="0"><span>${question.unit}</span></label>`;
   if (question.type === 'date') return `<label class="date-field"><input type="date" name="answer" max="${new Date().toISOString().slice(0, 10)}" value="${selected ?? ''}"></label>`;
   if (question.type === 'text') return `<label class="text-field"><textarea name="answer" rows="4" placeholder="${escapeHtml(question.placeholder)}">${escapeHtml(selected ?? '')}</textarea></label>`;
+  if (question.type === 'duration') { const [amount = '', unit = 'meses'] = (selected || '').split(' '); return `<div class="duration-field"><input type="number" name="duration-amount" inputmode="numeric" min="1" max="99" step="1" value="${amount}" placeholder="0"><select name="duration-unit" aria-label="Unidade de prazo"><option value="meses" ${unit === 'meses' ? 'selected' : ''}>meses</option><option value="anos" ${unit === 'anos' ? 'selected' : ''}>anos</option></select></div>`; }
+  if (question.type === 'nutrition') { const goals = selected || {}; return `<div class="nutrition-plan">${[['agua','💧 Água','litros/dia','0.1'],['calorias','🔥 Calorias','kcal/dia','1'],['proteinas','🥩 Proteínas','g/dia','1'],['carboidratos','🍞 Carboidratos','g/dia','1'],['gorduras','🥑 Gorduras','g/dia','1']].map(([id,label,unit,step]) => `<label><span>${label}<small>${unit}</small></span><input type="number" name="nutrition-${id}" inputmode="decimal" min="0" step="${step}" value="${goals[id] ?? ''}" placeholder="–"></label>`).join('')}<button class="ai-button" id="ai-suggestion" type="button">✨ Quero uma sugestão com IA</button><p class="ai-notice">A sugestão é informativa e não substitui o acompanhamento de médico ou nutricionista. Consulte um profissional antes de mudar sua alimentação ou tratamento.</p></div>`; }
   if (question.type === 'scale') return `<div class="scale" role="radiogroup" aria-label="Escala de 0 a 10">${Array.from({ length: 11 }, (_, value) => `<label class="scale__option"><input type="radio" name="answer" value="${value}" ${String(selected) === String(value) ? 'checked' : ''}><span>${value}</span></label>`).join('')}</div><div class="scale__labels"><span>Não acredito</span><span>Acredito totalmente</span></div>`;
   return options.map(option => `<label class="answer"><input type="${question.type === 'multi' ? 'checkbox' : 'radio'}" name="answer" value="${escapeHtml(option)}" ${(question.type === 'multi' ? selected?.includes(option) : selected === option) ? 'checked' : ''}><span>${escapeHtml(option)}</span></label>`).join('');
 }
@@ -67,6 +75,8 @@ function renderQuestion() {
 }
 
 function readAnswer(question) {
+  if (question.type === 'duration') { const amount = elements.form.querySelector('[name="duration-amount"]').value; const unit = elements.form.querySelector('[name="duration-unit"]').value; if (!amount || Number(amount) < 1) return ''; return `${amount} ${Number(amount) === 1 ? (unit === 'meses' ? 'mês' : 'ano') : unit}`; }
+  if (question.type === 'nutrition') return Object.fromEntries(['agua', 'calorias', 'proteinas', 'carboidratos', 'gorduras'].map(id => [id, elements.form.querySelector(`[name="nutrition-${id}"]`).value || null]));
   if (question.type === 'multi') return [...elements.form.querySelectorAll('input:checked')].map(input => input.value);
   const field = elements.form.querySelector('[name="answer"]:checked, [name="answer"]:not([type="radio"]):not([type="checkbox"])');
   return field?.value?.trim() ?? '';
@@ -83,7 +93,7 @@ elements.form.addEventListener('submit', async event => {
   event.preventDefault();
   const question = activeQuestions()[current];
   let value = normalizeExclusive(question, readAnswer(question));
-  if (!question.optional && (!value || (Array.isArray(value) && value.length === 0))) { elements.error.hidden = false; return; }
+  if (!question.optional && question.type !== 'nutrition' && (!value || (Array.isArray(value) && value.length === 0))) { elements.error.hidden = false; return; }
   answers[question.id] = value;
   const active = activeQuestions();
   if (current === active.length - 1) {
@@ -116,4 +126,19 @@ elements.form.addEventListener('submit', async event => {
 });
 
 elements.previous.addEventListener('click', () => { current -= 1; renderQuestion(); });
+elements.answers.addEventListener('click', async event => {
+  const button = event.target.closest('#ai-suggestion');
+  if (!button) return;
+  button.disabled = true; button.textContent = 'Gerando sugestão...';
+  try {
+    const response = await fetch(`${window.location.pathname}/sugestao-plano`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ dados: nutritionSuggestionData() }) });
+    const result = await response.json();
+    if (!response.ok || !result.metas) throw new Error('suggestion_failed');
+    Object.entries(result.metas).forEach(([key, value]) => { const input = elements.form.querySelector(`[name="nutrition-${key}"]`); if (input) input.value = value; });
+    button.textContent = 'Sugestão aplicada';
+  } catch (error) {
+    button.disabled = false; button.textContent = 'Tentar sugestão com IA novamente';
+    elements.error.textContent = 'Não foi possível gerar a sugestão agora. Você pode preencher os campos manualmente.'; elements.error.hidden = false;
+  }
+});
 renderQuestion();

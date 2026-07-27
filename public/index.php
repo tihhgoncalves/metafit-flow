@@ -8,6 +8,16 @@ $package = json_decode((string) file_get_contents(__DIR__ . '/../package.json'),
 $appVersion = is_array($package) && isset($package['version']) ? (string) $package['version'] : '0.0.0';
 $route = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/') ?: '/';
 
+if (preg_match('#^/triagem/([A-Za-z0-9_-]{32,512})/sugestao-plano$#', $route, $matches) === 1 && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $payload = json_decode((string) file_get_contents('php://input'), true);
+    $data = is_array($payload['dados'] ?? null) ? $payload['dados'] : [];
+    $metas = metafitNutritionPlanSuggestion($matches[1], $data);
+    header('Content-Type: application/json; charset=utf-8');
+    http_response_code($metas === null ? 502 : 200);
+    echo json_encode(['metas' => $metas], JSON_UNESCAPED_UNICODE);
+    return;
+}
+
 if (preg_match('#^/triagem/([A-Za-z0-9_-]{32,512})$#', $route, $matches) === 1) {
     $triageToken = $matches[1];
     $triageUser = metafitCurrentUser($triageToken);

@@ -87,3 +87,21 @@ function metafitSubmitTriage(string $token, string $userId, array $answers): boo
 
     return $status >= 200 && $status < 300;
 }
+
+/** @return array<string, mixed>|null */
+function metafitNutritionPlanSuggestion(string $token, array $data): ?array
+{
+    $request = curl_init(metafitApiBaseUrl() . '/ai/nutrition-plan-suggestion');
+    if ($request === false) return null;
+    curl_setopt_array($request, [
+        CURLOPT_CUSTOMREQUEST => 'POST', CURLOPT_POSTFIELDS => json_encode(['dados' => $data], JSON_UNESCAPED_UNICODE),
+        CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $token, 'Accept: application/json', 'Content-Type: application/json'],
+        CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 30, CURLOPT_CONNECTTIMEOUT => 5,
+    ]);
+    $response = curl_exec($request);
+    $status = (int) curl_getinfo($request, CURLINFO_RESPONSE_CODE);
+    curl_close($request);
+    if (!is_string($response) || $status < 200 || $status >= 300) return null;
+    $result = json_decode($response, true);
+    return is_array($result['metas'] ?? null) ? $result['metas'] : null;
+}
