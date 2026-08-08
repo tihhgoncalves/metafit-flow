@@ -146,7 +146,7 @@ function metafitRegisterInitialData(string $token, array $answers): bool
     }
 
     $dailyGoals = is_array($answers['nutritionPlan'] ?? null) ? $answers['nutritionPlan'] : [];
-    foreach (['agua', 'calorias', 'proteinas', 'carboidratos', 'gorduras'] as $goalName) {
+    foreach (['agua', 'calorias', 'proteinas', 'carboidratos', 'gorduras', 'fibras'] as $goalName) {
         if (!empty($dailyGoals[$goalName]) && (float) $dailyGoals[$goalName] > 0) {
             $success = metafitApiRequest($token, 'POST', '/goals', ['goal' => $goalName, 'type' => 'diaria', 'value' => (float) $dailyGoals[$goalName]]) && $success;
         }
