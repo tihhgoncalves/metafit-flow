@@ -460,6 +460,51 @@ h1 {
   margin: auto 0;
 }
 
+.loading-overlay {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(17, 19, 19, 0.8);
+  color: #fff;
+}
+
+.loading-overlay[hidden] {
+  display: none;
+}
+
+.loading-overlay__content {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.loading-overlay__content p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.loading-overlay__spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.3019607843);
+  border-top-color: var(--hot);
+  border-radius: 50%;
+  animation: loading-spin 0.8s linear infinite;
+}
+
+body.is-loading {
+  overflow: hidden;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 @media (max-width: 560px) {
   .page-shell {
     padding: 0;

@@ -59,6 +59,12 @@ declare(strict_types=1);
         </div>
     </main>
     <?php if ($triageUser !== null): ?>
+    <div id="ai-loading-overlay" class="loading-overlay" role="status" aria-live="assertive" aria-label="Gerando sugestão com inteligência artificial" hidden>
+        <div class="loading-overlay__content">
+            <span class="loading-overlay__spinner" aria-hidden="true"></span>
+            <p>Gerando sua sugestão com IA...</p>
+        </div>
+    </div>
     <script>window.triageContext = <?= json_encode(['firstName' => $triageUser['first_name'] ?? $triageUser['name'] ?? null, 'user' => $triageUser], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
     <script src="/public/assets/js/triage.js?v=<?= urlencode($appVersion) ?>" defer></script>
     <?php endif; ?>

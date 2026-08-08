@@ -27,7 +27,7 @@ const questions = [
 let current = 0;
 const answers = {};
 const elements = {
-  category: document.querySelector('#question-category'), title: document.querySelector('#flow-title'), description: document.querySelector('#question-description'), answers: document.querySelector('#answers'), progress: document.querySelector('#progress-bar'), progressText: document.querySelector('#progress-text'), previous: document.querySelector('#previous-button'), next: document.querySelector('#next-button'), form: document.querySelector('#triage-form'), error: document.querySelector('#field-error'), questionScreen: document.querySelector('#question-screen'), completion: document.querySelector('#completion-screen')
+  category: document.querySelector('#question-category'), title: document.querySelector('#flow-title'), description: document.querySelector('#question-description'), answers: document.querySelector('#answers'), progress: document.querySelector('#progress-bar'), progressText: document.querySelector('#progress-text'), previous: document.querySelector('#previous-button'), next: document.querySelector('#next-button'), form: document.querySelector('#triage-form'), error: document.querySelector('#field-error'), questionScreen: document.querySelector('#question-screen'), completion: document.querySelector('#completion-screen'), page: document.querySelector('main'), aiLoadingOverlay: document.querySelector('#ai-loading-overlay')
 };
 
 const firstName = window.triageContext?.firstName?.trim()?.split(' ')[0];
@@ -41,6 +41,12 @@ function apiAnswers() {
 
 function nutritionSuggestionData() {
   return { respostas: apiAnswers() };
+}
+
+function setAiLoading(isLoading) {
+  elements.aiLoadingOverlay.hidden = !isLoading;
+  elements.page.inert = isLoading;
+  document.body.classList.toggle('is-loading', isLoading);
 }
 
 function activeQuestions() { return questions.filter(question => !question.condition || question.condition(answers)); }
@@ -130,6 +136,7 @@ elements.answers.addEventListener('click', async event => {
   const button = event.target.closest('#ai-suggestion');
   if (!button) return;
   button.disabled = true; button.textContent = 'Gerando sugestão...';
+  setAiLoading(true);
   try {
     const response = await fetch(`${window.location.pathname}/sugestao-plano`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ dados: nutritionSuggestionData() }) });
     const result = await response.json();
@@ -139,6 +146,8 @@ elements.answers.addEventListener('click', async event => {
   } catch (error) {
     button.disabled = false; button.textContent = 'Tentar sugestão com IA novamente';
     elements.error.textContent = 'Não foi possível gerar a sugestão agora. Você pode preencher os campos manualmente.'; elements.error.hidden = false;
+  } finally {
+    setAiLoading(false);
   }
 });
 renderQuestion();
