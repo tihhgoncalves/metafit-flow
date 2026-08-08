@@ -471,6 +471,10 @@ h1 {
   color: #fff;
 }
 
+.loading-overlay[hidden] {
+  display: none;
+}
+
 .loading-overlay__content {
   display: grid;
   justify-items: center;
